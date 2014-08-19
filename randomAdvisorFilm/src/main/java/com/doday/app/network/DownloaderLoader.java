@@ -89,8 +89,10 @@ public class DownloaderLoader{
                     try {
                         delegate.loadingComplete(firstUrlToRequest, treatementPage.getResponseFromRequest(firstUrlToRequest));
                     } catch (Exception e) {
-                        Log.e(TAG, String.format("Exception : %s", e));
-                        delegate.onError(String.format("Exception : %s", e));
+                        final String errorFormatted = String.format("%s Exception : %s \n %s",TAG,  e.getMessage(), e.getStackTrace());
+                        Log.e(TAG, errorFormatted);
+                        delegate.onError(errorFormatted);
+                        throw new RuntimeException(errorFormatted);
                     }
                 }else{
                     Log.v(TAG,String.format("Annulation de la notification %s",firstUrlToRequest.toString()));
@@ -178,7 +180,7 @@ public class DownloaderLoader{
                 try {
                     inputStreamn.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "Exception : " + e.getMessage());
+                    Log.e(TAG, String.format("Exception : %s %s",e.getMessage(), e.getStackTrace()));
                 }
             }
         }
@@ -200,7 +202,7 @@ public class DownloaderLoader{
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "Exception : " + e.getMessage());
+                    Log.e(TAG, String.format("Exception : %s %s",e.getMessage(), e.getStackTrace()));
                 }
             }
             return result;

@@ -34,7 +34,7 @@ public class ConfigurationAsyncLoader implements DownloaderLoader.LoadingConfigu
             treatementPage = new DownloaderLoader.TreatementPage();
             downloaderLoader.executeRequestAndReadStream(new URL(stringUrl), this, treatementPage);
         } catch (MalformedURLException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, String.format("Exception : %s %s",e.getMessage(), e.getStackTrace()));
         }
     }
 
@@ -53,9 +53,12 @@ public class ConfigurationAsyncLoader implements DownloaderLoader.LoadingConfigu
                 if (imageRessourceName.equals("null") || imageRessourceName.length() == 0) {
                     imageRessourceName = film.getString("poster_path"); //TODO et si même le poster est a null, que faire ??
                 }
-                downloaderLoader.executeRequestAndReadStream(
-                        new URL(String.format(BASE_URL_PICTURE, imageRessourceName)), activity, new DownloaderLoader.TreatementImage());
-                Log.i(TAG, String.format("image %d : ", i));
+                Log.i(TAG, String.format("image %d %s : ", i,imageRessourceName));
+                imageRessourceName.trim();
+                if(!imageRessourceName.trim().equals("null")) {
+                    downloaderLoader.executeRequestAndReadStream(
+                            new URL(String.format(BASE_URL_PICTURE, imageRessourceName)), activity, new DownloaderLoader.TreatementImage());
+                }
                 i++;
             }
             if(isAborted()){
