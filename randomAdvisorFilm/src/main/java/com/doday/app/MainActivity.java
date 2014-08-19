@@ -2,13 +2,14 @@
 package com.doday.app;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
+
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class MainActivity extends Activity implements DownloaderLoader.LoadingImageListener {
+public class MainActivity extends ActionBarActivity implements DownloaderLoader.LoadingImageListener {
 
     private static final String TAG = "MainActivity";
     private TextView hello;
@@ -108,7 +109,7 @@ public class MainActivity extends Activity implements DownloaderLoader.LoadingIm
     public void loadingComplete(URL url, ByteArrayOutputStream image) {
         tabCinemaThumb[cpt] = image;
         cpt++;
-        if(20 == cpt){
+        if(19 == cpt){
             cpt = 0;
             initializeGridView(tabCinemaThumb);
         }
@@ -140,5 +141,26 @@ public class MainActivity extends Activity implements DownloaderLoader.LoadingIm
         });
 
 
+    }
+
+    public void clearCache(MenuItem item) {
+        Toast.makeText(MainActivity.this, "Clear cache !!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+       // getMenuInflater().inflate(R.menu.activity_main,menu);
+       // return true;
+        return  super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_clear_cache:
+                clearCache(item);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

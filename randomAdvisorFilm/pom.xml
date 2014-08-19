@@ -21,11 +21,9 @@
 
 		<!-- Dependencies -->
 		<android.version>4.1.1.4</android.version>
-		<support-v4.version>r7</support-v4.version>
+		<support.version>19.1.0</support.version>
         <android.sdk.path>C:\Users\Formation\AppData\Local\Android\android-studio\sdk</android.sdk.path>
-
 	</properties>
-
 	<dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -41,6 +39,12 @@
             <version>${android.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.android.support</groupId>
+            <artifactId>support-v4</artifactId>
+            <version>${support.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.robolectric</groupId>
             <artifactId>robolectric</artifactId>
             <version>2.3</version>
@@ -53,10 +57,18 @@
             </exclusions>
         </dependency>
         <dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>support-v4</artifactId>
-			<version>${support-v4.version}</version>
-		</dependency>
+            <groupId>com.google.android.support</groupId>
+            <artifactId>appcompat-v7</artifactId>
+            <version>${support.version}</version>
+            <type>aar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.android.support</groupId>
+                    <artifactId>support-v4</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>com.integralblue</groupId>
             <artifactId>httpresponsecache</artifactId>
