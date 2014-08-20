@@ -29,6 +29,11 @@ public class DownloaderLoader{
     private static final String TAG = "DownloaderLoader";
     public static int DAY = 60 * 60 * 24;
     private AtomicBoolean isInterrupted;
+
+    public void clearCache() {
+
+    }
+
     enum DAY_IN_WEEK{
         SUNDAY(3),MONDAY(4),TUESDAY(5),WEDNESDAY(6),THURSDAY(0),FRIDAY(1),SATURDAY(2);
 
@@ -61,6 +66,8 @@ public class DownloaderLoader{
         void loadingComplete(URL url, T result) throws MalformedURLException, JSONException;
 
         void onError(String errorFormatted);
+
+
     }
     public interface LoadingImageListener extends DownloadingListener<ByteArrayOutputStream>{
     }
@@ -92,7 +99,7 @@ public class DownloaderLoader{
                         final String errorFormatted = String.format("%s Exception : %s \n %s",TAG,  e.getMessage(), e.getStackTrace());
                         Log.e(TAG, errorFormatted);
                         delegate.onError(errorFormatted);
-                        throw new RuntimeException(errorFormatted);
+                       // throw new RuntimeException(errorFormatted);
                     }
                 }else{
                     Log.v(TAG,String.format("Annulation de la notification %s",firstUrlToRequest.toString()));
