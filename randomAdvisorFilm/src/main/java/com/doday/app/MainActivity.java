@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.doday.app.adapter.ImageAdapter;
 import com.doday.app.network.ConfigurationAsyncLoader;
 import com.doday.app.network.DownloaderLoader;
+import com.doday.app.network.MyHttpCache;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,13 +32,13 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     private static final String BASE_URL_CONFIGURATION = "http://api.themoviedb.org/3/movie/now_playing"; //TODO a mettre dans un fichier de configuration
     GridView gridView;
     private ConfigurationAsyncLoader asyncLoader;
-    private HttpResponseCache iceCreamSandwichCache;
-    private com.integralblue.httpresponsecache.HttpResponseCache preIceCreamSandwichCache;
+    private MyHttpCache myHttpCache;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        enableHttpResponseCache();
+        myHttpCache = new MyHttpCache();
+        myHttpCache.enableHttpResponseCache(getApplicationContext());
 
         asyncLoader = new ConfigurationAsyncLoader(BASE_URL_CONFIGURATION +
                 "?api_key=" +API_KEY_MOVIE_DB,this);
@@ -48,82 +49,10 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
 
     }
 
-/******************************************************************************************************************/
-    //TODO faire 2 calsses : gestion iceCreamSandwichCache before ICE CREAM SANDWICH et after ICE CREAM SANDWICH
-    //TODO utiliser le design pattern strategy ?
-
-    private void enableHttpResponseCache() {
-        long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
-        File httpCacheDir = new File(getApplicationContext().getCacheDir(), "http");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            try {
-                HttpResponseCache.install(httpCacheDir, httpCacheSize);
-                iceCreamSandwichCache = HttpResponseCache.getInstalled();
-            }catch (IOException e) {
-                Log.e(TAG, "HTTP response post ICS iceCreamSandwichCache installation failed:" + e);
-            }
-        }else{
-            try {
-                com.integralblue.httpresponsecache.HttpResponseCache.install(httpCacheDir, httpCacheSize);
-                preIceCreamSandwichCache = com.integralblue.httpresponsecache.HttpResponseCache.getInstalled();
-            } catch (IOException e) {
-                Log.e(TAG, "HTTP response pre ICS iceCreamSandwichCache installation failed:" + e);
-            }
-        }
-    }
-
-    private void desableHttpResponseCache() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                if (iceCreamSandwichCache != null) {
-                    iceCreamSandwichCache.flush();
-                }
-            } else {
-                if (preIceCreamSandwichCache != null) {
-                    preIceCreamSandwichCache.flush();
-                }
-            }
-        }catch(IllegalStateException e){
-            Log.i(TAG,String.format("The cache is closed, it cant be flushed %s %s",e.getMessage(),e.getStackTrace()));
-        }
-    }
-
-    public void clearCache() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            Toast.makeText(MainActivity.this, "Clear iceCreamSandwichCache !!", Toast.LENGTH_LONG).show();
-            try {
-                if (iceCreamSandwichCache != null) {
-                    iceCreamSandwichCache.delete();
-                }
-            } catch (IOException e) {
-                Log.e(TAG, String.format("%s \n %s", e.getMessage(), e.getStackTrace()));
-            }
-        }else{
-            try {
-                preIceCreamSandwichCache.delete();
-            } catch (IOException e) {
-                Log.e(TAG, String.format("%s \n %s", e.getMessage(), e.getStackTrace()));
-            }
-        }
-    }
-    /******************************************************************************************************************/
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        desableHttpResponseCache();
+        myHttpCache.desableHttpResponseCache();
         asyncLoader.cancel();
     }
     ByteArrayOutputStream[] tabCinemaThumb = new ByteArrayOutputStream[20];
@@ -138,7 +67,6 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
             initializeGridView(tabCinemaThumb);
         }
     }
-
 
     @Override
     public void onError(final String errorFormatted) {
@@ -163,8 +91,6 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
                 });
             }
         });
-
-
     }
 
     @Override
@@ -177,7 +103,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.menu_clear_cache:
-                clearCache();
+                myHttpCache.clearCache(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
