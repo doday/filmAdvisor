@@ -23,7 +23,6 @@ import com.doday.app.network.DownloaderLoader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 public class MainActivity extends ActionBarActivity implements DownloaderLoader.LoadingImageListener {
@@ -143,22 +142,21 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
 
     }
 
-    public void clearCache(MenuItem item) {
+    public void clearCache() {
         Toast.makeText(MainActivity.this, "Clear cache !!", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       // getMenuInflater().inflate(R.menu.activity_main,menu);
-       // return true;
-        return  super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.activity_main_actions,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.menu_clear_cache:
-                clearCache(item);
+                clearCache();
                 return true;
         }
         return super.onOptionsItemSelected(item);
