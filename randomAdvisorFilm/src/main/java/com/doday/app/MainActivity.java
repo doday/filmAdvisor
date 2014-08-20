@@ -1,11 +1,8 @@
 
 package com.doday.app;
 
-import android.net.http.HttpResponseCache;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +14,9 @@ import android.widget.Toast;
 import com.doday.app.adapter.ImageAdapter;
 import com.doday.app.network.ConfigurationAsyncLoader;
 import com.doday.app.network.DownloaderLoader;
-import com.doday.app.network.MyHttpCache;
+import com.doday.app.network.FromApi8HttpCache;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends ActionBarActivity implements DownloaderLoader.LoadingImageListener {
@@ -32,12 +27,12 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     private static final String BASE_URL_CONFIGURATION = "http://api.themoviedb.org/3/movie/now_playing"; //TODO a mettre dans un fichier de configuration
     GridView gridView;
     private ConfigurationAsyncLoader asyncLoader;
-    private MyHttpCache myHttpCache;
+    private FromApi8HttpCache myHttpCache;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myHttpCache = new MyHttpCache();
+        myHttpCache = new FromApi8HttpCache();
         myHttpCache.enableHttpResponseCache(getApplicationContext());
 
         asyncLoader = new ConfigurationAsyncLoader(BASE_URL_CONFIGURATION +

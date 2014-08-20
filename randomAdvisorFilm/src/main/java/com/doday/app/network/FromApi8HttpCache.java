@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * Created by Formation on 20/08/2014.
  */
-public class MyHttpCache <T extends Object> {
+public class FromApi8HttpCache {
 
     private static final String TAG = "MyHttpCache";
     private HttpResponseCache iceCreamSandwichCache;
@@ -72,7 +72,5 @@ public class MyHttpCache <T extends Object> {
             }
         }
     }
-
-
 
 }
