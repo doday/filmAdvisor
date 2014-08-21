@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     private ArrayList<MyBitmapThumb> listCinemaThumb;//quel est le plus lours ? des bitmap ou des  ByteArrayOutputStream ou même des bytes ?
     private ImageAdapter adapter;
     private int currentFilm;
-    private ArrayList<Integer> returnedImage = new ArrayList<Integer>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +55,6 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
                 animRotate.setDuration(500);
                 animRotate.addListener(MainActivity.this);
                 animRotate.start();
-
-
             }
         });
         listCinemaThumb = new ArrayList<MyBitmapThumb>();
@@ -129,25 +127,10 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
 
     @Override
     public void onAnimationEnd(Animator animation) {
-
-
-        //if(!returnedImage.contains(currentFilm)) {
-            final Bitmap bitmap = MyBitmapFactory.
-                    getBitmapAtDimensions(getResources(),
-                            R.drawable.thumb_black_pink_generated, ImageAdapter.thumbSize,
-                            ImageAdapter.thumbSize);
-            listCinemaThumb.set(currentFilm, new MyBitmapThumb(bitmap));
-            returnedImage.add(currentFilm);
-        /*}else{
-            final Bitmap bitmap2 = MyBitmapFactory.
-                    getBitmapAtDimensions(getResources(),
-                            R.drawable.ic_launcher, ImageAdapter.thumbSize,
-                            ImageAdapter.thumbSize);
-            listCinemaThumb.set(currentFilm,bitmap2);
-            returnedImage.remove(Integer.valueOf(currentFilm));
-        }*/
+        final MyBitmapThumb myBitmapThumb = listCinemaThumb.get(currentFilm);
+        myBitmapThumb.returned();
+        listCinemaThumb.set(currentFilm, myBitmapThumb);
         adapter.notifyDataSetChanged();
-
     }
 
     @Override

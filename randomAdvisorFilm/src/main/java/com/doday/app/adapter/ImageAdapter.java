@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.doday.app.R;
 import com.doday.app.image.MyBitmapFactory;
 import com.doday.app.image.MyBitmapThumb;
 
@@ -47,7 +48,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(int position, View convertView, ViewGroup viewGroup) {//il faut alléger le plus possible getView car sinon cela provoquera des lage
         ImageView imageView;
         if(convertView == null){
             imageView = new ImageView(context);
@@ -57,7 +58,16 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView)convertView;
         }
 
-        imageView.setImageBitmap(listFilmThumb.get(position).getBitamp()); //il faut alléger le plus possible getView car sinon cela provoquera des lage
+        final MyBitmapThumb myBitmapThumb = listFilmThumb.get(position);
+        if(!myBitmapThumb.isReturned()) {
+            imageView.setImageBitmap(myBitmapThumb.getBitamp());
+        }else{
+            final Bitmap bitmap = MyBitmapFactory.
+                    getBitmapAtDimensions(context.getResources(),
+                            R.drawable.thumb_black_pink_generated, ImageAdapter.thumbSize,
+                            ImageAdapter.thumbSize);
+            imageView.setImageBitmap(bitmap);
+        }
         return imageView;
     }
 
