@@ -1,12 +1,18 @@
 
 package com.doday.app;
 
+
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -16,12 +22,14 @@ import com.doday.app.image.MyBitmapFactory;
 import com.doday.app.network.ConfigurationAsyncLoader;
 import com.doday.app.network.DownloaderLoader;
 import com.doday.app.network.FromApi8HttpCache;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements DownloaderLoader.LoadingImageListener {
+public class MainActivity extends ActionBarActivity implements DownloaderLoader.LoadingImageListener, Animator.AnimatorListener {
 
     private static final String TAG = "MainActivity";
     public static final String API_KEY_MOVIE_DB = "189ec91ba809cb4d27ef56780e4aa516";//TODO a mettre dans un fichier de configuration
@@ -31,7 +39,8 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     private FromApi8HttpCache myHttpCache;
     private ArrayList<Bitmap> listCinemaThumb;//quel est le plus lours ? des bitmap ou des  ByteArrayOutputStream ou même des bytes ?
     private ImageAdapter adapter;
-
+    private int currentFilm;
+    private ArrayList<Integer> returnedImage = new ArrayList<Integer>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,16 +49,13 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                currentFilm = position;
+                ObjectAnimator animRotate = ObjectAnimator.ofFloat(view,"rotationY",0f,540f);
+                animRotate.setDuration(500);
+                animRotate.addListener(MainActivity.this);
+                animRotate.start();
 
-                final Bitmap bitmap = MyBitmapFactory.
-                        getBitmapAtDimensions(getResources(),
-                                R.drawable.thumb_black_pink_generated, ImageAdapter.thumbSize,
-                                ImageAdapter.thumbSize);
 
-                listCinemaThumb.set(position, bitmap);
-                adapter.notifyDataSetChanged();
-
-                Toast.makeText(MainActivity.this, "Hello " + position, Toast.LENGTH_LONG).show();
             }
         });
         listCinemaThumb = new ArrayList<Bitmap>();
@@ -113,5 +119,43 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
         super.onDestroy();
         myHttpCache.desableHttpResponseCache();
         asyncLoader.cancel();
+    }
+
+    @Override
+    public void onAnimationStart(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animation) {
+
+
+        //if(!returnedImage.contains(currentFilm)) {
+            final Bitmap bitmap = MyBitmapFactory.
+                    getBitmapAtDimensions(getResources(),
+                            R.drawable.thumb_black_pink_generated, ImageAdapter.thumbSize,
+                            ImageAdapter.thumbSize);
+            listCinemaThumb.set(currentFilm, bitmap);
+            returnedImage.add(currentFilm);
+        /*}else{
+            final Bitmap bitmap2 = MyBitmapFactory.
+                    getBitmapAtDimensions(getResources(),
+                            R.drawable.ic_launcher, ImageAdapter.thumbSize,
+                            ImageAdapter.thumbSize);
+            listCinemaThumb.set(currentFilm,bitmap2);
+            returnedImage.remove(Integer.valueOf(currentFilm));
+        }*/
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animation) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animation) {
+
     }
 }
