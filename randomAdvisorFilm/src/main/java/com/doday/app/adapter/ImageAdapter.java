@@ -11,28 +11,28 @@ import android.widget.ImageView;
 import com.doday.app.image.MyBitmapFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
 * Created by Formation on 24/07/2014.
 */
 public class ImageAdapter extends BaseAdapter {
     private final Context context ;
-    private ByteArrayOutputStream[] tabCinemaThumb;
-    private int thumbSize = 340;//choisir la taille de la largeur (portrait et paysage) des vignettes dynamiquement
+    private ArrayList<ByteArrayOutputStream> listFilmThumb;
+    private int thumbSize = 340;//TODO choisir la taille de la largeur (portrait et paysage) des vignettes dynamiquement
 
     public ImageAdapter(Context context) {
         this.context = context;
     }
 
-    public ImageAdapter(Context context,ByteArrayOutputStream[] tabCinemaThumb ) {
-        this.context = context;
-        this.tabCinemaThumb = tabCinemaThumb;
+    public ImageAdapter(Context context, ArrayList<ByteArrayOutputStream> listCinemaThumb) {
+        this(context);
+        this.listFilmThumb = listCinemaThumb;
     }
 
     @Override
     public int getCount() {
-        return tabCinemaThumb.length;
+        return listFilmThumb.size();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView)convertView;
         }
 
-        final Bitmap bitmapFromStreamAtDimensions = MyBitmapFactory.getBitmapFromStreamAtDimensions(tabCinemaThumb[position], thumbSize, thumbSize);
+        final Bitmap bitmapFromStreamAtDimensions = MyBitmapFactory.getBitmapFromStreamAtDimensions(listFilmThumb.get(position), thumbSize, thumbSize);
         imageView.setImageBitmap(bitmapFromStreamAtDimensions);
         return imageView;
     }

@@ -63,7 +63,7 @@ public class DownloaderLoader{
 
 
     public interface DownloadingListener<T> {
-        void loadingComplete(URL url, T result) throws MalformedURLException, JSONException;
+        void onLoadingCompleted(URL url, T result) throws MalformedURLException, JSONException;
 
         void onError(String errorFormatted);
 
@@ -94,7 +94,7 @@ public class DownloaderLoader{
 
                 if (!isInterrupted().get()) {
                     try {
-                        delegate.loadingComplete(firstUrlToRequest, treatementPage.getResponseFromRequest(firstUrlToRequest));
+                        delegate.onLoadingCompleted(firstUrlToRequest, treatementPage.getResponseFromRequest(firstUrlToRequest));
                     } catch (Exception e) {
                         final String errorFormatted = String.format("%s Exception : %s \n %s",TAG,  e.getMessage(), e.getStackTrace());
                         Log.e(TAG, errorFormatted);

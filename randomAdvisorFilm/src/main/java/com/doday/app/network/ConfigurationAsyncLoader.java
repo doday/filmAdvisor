@@ -69,7 +69,7 @@ public class ConfigurationAsyncLoader implements DownloaderLoader.LoadingConfigu
     }
 
     @Override
-    public void loadingComplete(URL url, String result) throws MalformedURLException, JSONException {
+    public void onLoadingCompleted(URL url, String result) throws MalformedURLException, JSONException {
         launchImagesRequest(result);
     }
 
