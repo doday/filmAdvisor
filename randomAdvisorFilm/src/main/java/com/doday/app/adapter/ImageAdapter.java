@@ -9,6 +9,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.doday.app.image.MyBitmapFactory;
+import com.doday.app.image.MyBitmapThumb;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ import java.util.ArrayList;
 */
 public class ImageAdapter extends BaseAdapter {
     private final Context context ;
-    private ArrayList<Bitmap> listFilmThumb;
+    private ArrayList<MyBitmapThumb> listFilmThumb;
     public static int thumbSize = 340;//TODO choisir la taille de la largeur (portrait et paysage) des vignettes dynamiquement
 
     public ImageAdapter(Context context) {
         this.context = context;
     }
 
-    public ImageAdapter(Context context, ArrayList<Bitmap> listCinemaThumb) {
+    public ImageAdapter(Context context, ArrayList<MyBitmapThumb> listCinemaThumb) {
         this(context);
         this.listFilmThumb = listCinemaThumb;
     }
@@ -56,7 +57,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView)convertView;
         }
 
-        imageView.setImageBitmap(listFilmThumb.get(position)); //il faut alléger le plus possible getView car sinon cela provoquera des lage
+        imageView.setImageBitmap(listFilmThumb.get(position).getBitamp()); //il faut alléger le plus possible getView car sinon cela provoquera des lage
         return imageView;
     }
 

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.doday.app.adapter.ImageAdapter;
 import com.doday.app.image.MyBitmapFactory;
+import com.doday.app.image.MyBitmapThumb;
 import com.doday.app.network.ConfigurationAsyncLoader;
 import com.doday.app.network.DownloaderLoader;
 import com.doday.app.network.FromApi8HttpCache;
@@ -37,7 +38,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     private GridView gridView;
     private ConfigurationAsyncLoader asyncLoader;
     private FromApi8HttpCache myHttpCache;
-    private ArrayList<Bitmap> listCinemaThumb;//quel est le plus lours ? des bitmap ou des  ByteArrayOutputStream ou même des bytes ?
+    private ArrayList<MyBitmapThumb> listCinemaThumb;//quel est le plus lours ? des bitmap ou des  ByteArrayOutputStream ou même des bytes ?
     private ImageAdapter adapter;
     private int currentFilm;
     private ArrayList<Integer> returnedImage = new ArrayList<Integer>();
@@ -58,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
 
             }
         });
-        listCinemaThumb = new ArrayList<Bitmap>();
+        listCinemaThumb = new ArrayList<MyBitmapThumb>();
         adapter = new ImageAdapter(this, listCinemaThumb);
         gridView.setAdapter(adapter);
 
@@ -107,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
             public void run() {
                 final Bitmap bitmap = MyBitmapFactory.getBitmapAtDimensions(image, ImageAdapter.thumbSize,
                         ImageAdapter.thumbSize);
-                listCinemaThumb.add(bitmap);
+                listCinemaThumb.add(new MyBitmapThumb(bitmap));
                 adapter.notifyDataSetChanged();
 
             }
@@ -135,7 +136,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
                     getBitmapAtDimensions(getResources(),
                             R.drawable.thumb_black_pink_generated, ImageAdapter.thumbSize,
                             ImageAdapter.thumbSize);
-            listCinemaThumb.set(currentFilm, bitmap);
+            listCinemaThumb.set(currentFilm, new MyBitmapThumb(bitmap));
             returnedImage.add(currentFilm);
         /*}else{
             final Bitmap bitmap2 = MyBitmapFactory.
