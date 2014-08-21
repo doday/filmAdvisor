@@ -18,14 +18,14 @@ import java.util.ArrayList;
 */
 public class ImageAdapter extends BaseAdapter {
     private final Context context ;
-    private ArrayList<ByteArrayOutputStream> listFilmThumb;
-    private int thumbSize = 340;//TODO choisir la taille de la largeur (portrait et paysage) des vignettes dynamiquement
+    private ArrayList<Bitmap> listFilmThumb;
+    public static int thumbSize = 340;//TODO choisir la taille de la largeur (portrait et paysage) des vignettes dynamiquement
 
     public ImageAdapter(Context context) {
         this.context = context;
     }
 
-    public ImageAdapter(Context context, ArrayList<ByteArrayOutputStream> listCinemaThumb) {
+    public ImageAdapter(Context context, ArrayList<Bitmap> listCinemaThumb) {
         this(context);
         this.listFilmThumb = listCinemaThumb;
     }
@@ -56,8 +56,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView)convertView;
         }
 
-        final Bitmap bitmapFromStreamAtDimensions = MyBitmapFactory.getBitmapFromStreamAtDimensions(listFilmThumb.get(position), thumbSize, thumbSize);
-        imageView.setImageBitmap(bitmapFromStreamAtDimensions);
+        imageView.setImageBitmap(listFilmThumb.get(position)); //il faut alléger le plus possible getView car sinon cela provoquera des lage
         return imageView;
     }
 

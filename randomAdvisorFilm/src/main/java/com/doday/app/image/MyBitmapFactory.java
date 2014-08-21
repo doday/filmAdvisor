@@ -13,15 +13,15 @@ public class MyBitmapFactory {
 
     private static final String TAG = "MyBitmapFactory";
 
-    public static Bitmap getBitmapFromResourceAtDimensions(Resources res, int resId,
-                                                           int reqWidth, int reqHeight) {
+    public static Bitmap getBitmapAtDimensions(Resources res, int resId,
+                                               int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = calculateDimensInOptionFromBitmapAndSize(res, resId, reqWidth, reqHeight);
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return android.graphics.BitmapFactory.decodeResource(res, resId, options);
     }
 
-    public static Bitmap getBitmapFromStreamAtDimensions(ByteArrayOutputStream baos, int thumbWidth, int thumbHeight) {
+    public static Bitmap getBitmapAtDimensions(ByteArrayOutputStream baos, int thumbWidth, int thumbHeight) {
         if(baos != null) {
             // Determine the new dimensions of image
             final BitmapFactory.Options options = calculateDimensInOptionFromInputStreamAndSize(baos, thumbWidth, thumbHeight);

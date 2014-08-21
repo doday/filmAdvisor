@@ -1,18 +1,18 @@
 
 package com.doday.app;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doday.app.adapter.ImageAdapter;
+import com.doday.app.image.MyBitmapFactory;
 import com.doday.app.network.ConfigurationAsyncLoader;
 import com.doday.app.network.DownloaderLoader;
 import com.doday.app.network.FromApi8HttpCache;
@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
     private GridView gridView;
     private ConfigurationAsyncLoader asyncLoader;
     private FromApi8HttpCache myHttpCache;
-    private ArrayList<ByteArrayOutputStream> listCinemaThumb;
+    private ArrayList<Bitmap> listCinemaThumb;//quel est le plus lours ? des bitmap ou des  ByteArrayOutputStream ou même des bytes ?
     private ImageAdapter adapter;
 
     @Override
@@ -37,8 +37,22 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         gridView = (GridView)findViewById(R.id.grid);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-        listCinemaThumb = new ArrayList<ByteArrayOutputStream>();
+                final Bitmap bitmap = MyBitmapFactory.
+                        getBitmapAtDimensions(getResources(),
+                                R.drawable.thumb_black_pink_generated, ImageAdapter.thumbSize,
+                                ImageAdapter.thumbSize);
+
+                listCinemaThumb.set(position, bitmap);
+                adapter.notifyDataSetChanged();
+
+                Toast.makeText(MainActivity.this, "Hello " + position, Toast.LENGTH_LONG).show();
+            }
+        });
+        listCinemaThumb = new ArrayList<Bitmap>();
         adapter = new ImageAdapter(this, listCinemaThumb);
         gridView.setAdapter(adapter);
 
@@ -85,8 +99,11 @@ public class MainActivity extends ActionBarActivity implements DownloaderLoader.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                listCinemaThumb.add(image);
+                final Bitmap bitmap = MyBitmapFactory.getBitmapAtDimensions(image, ImageAdapter.thumbSize,
+                        ImageAdapter.thumbSize);
+                listCinemaThumb.add(bitmap);
                 adapter.notifyDataSetChanged();
+
             }
         });
     }
